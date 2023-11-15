@@ -33,7 +33,7 @@
         >
           <ul class="content">
             <li v-for="i in contentList" :key="i.id">
-              <a href="#">
+              <a :href="`https://m.ximalaya.com/ting/${i.id}`">
                 <div class="left">
                   <img :src="i.coverPathSmall" />
                 </div>
@@ -58,10 +58,10 @@ export default {
   data() {
     return {
       searchShow: false,
-      active: 1,
+      active: 'remen',
       tabBarList: [],
       contentList: [],
-      tabBarId: "youshengshu",
+      tabBarId: "remen",
     };
   },
   methods: {
@@ -152,7 +152,7 @@ export default {
       height: 50px;
       display: flex;
       align-items: center;
-      background-color: cadetblue;
+      // background-color: cadetblue;
       .logo {
         background: url("../assets/logo.webp") no-repeat -54px -14px;
         width: 127px;
@@ -169,17 +169,14 @@ export default {
   .tabBar {
     position: relative;
 
-    // &::after {
-    //   position: absolute;
-    //   bottom: 15px;
-    //   left: 0;
-    //   content: "";
-    //   width: 100%;
-    //   height: 1px;
-    //   background-color: #ebebeb;
-    // }
-    .van-tabs__nav--line.van-tabs__nav--complete {
-      border-bottom: 1px solid #ccc;
+    &::after {
+      position: absolute;
+      content: "";
+      top: 44px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #ebebeb;
     }
   }
   .tabBar .content {

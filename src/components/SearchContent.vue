@@ -14,10 +14,10 @@
     <div class="searchHistory" v-show="inputVal == '' ? true : false">
       <div class="top">
         <span>搜索历史</span>
-        <van-icon name="delete-o" />
+        <van-icon name="delete-o" @click="delLocalstorage()" />
       </div>
       <ul class="history">
-        <li>三体</li>
+        <li v-for="i in historyList" :key="i">{{ i }}</li>
       </ul>
     </div>
 
@@ -33,7 +33,11 @@
         :name="i.categoryId"
         :title="i.categoryName"
       >
-        <p v-for="(i, index) in searchList" :key="i.score">
+        <p
+          v-for="(i, index) in searchList"
+          :key="i.score"
+          @click="getHotSearchName(i.word)"
+        >
           <span>{{ index + 1 }}</span>
           <span>{{ i.word }}</span>
           <i></i>
@@ -58,15 +62,26 @@
       </div>
       <!-- 搜索列表 -->
       <ul class="queryResList">
-        <li v-for="i in queryResList" :key="i.keyword">{{ i.keyword }}</li>
+        <router-link
+          tag="li"
+          :to="{name: 'searchRes', params: {searchVal: i.keyword} }"
+          v-for="i in queryResList"
+          :key="i.keyword"
+          @click="getSearchVal(i.keyword)"
+        >
+          {{ i.keyword }}
+        </router-link>
+        <router-view></router-view>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+// import SearchResView from "@/views/SearchResView.vue";
 import { getsearchNav } from "../apis/searchNav.js";
 export default {
+  components: {},
   props: ["searchShow"],
   data() {
     return {
@@ -85,6 +100,14 @@ export default {
     this.searchNav = category;
 
     this.getSearchList();
+
+    if (localStorage.getItem("historyList")) {
+      this.getLocalStorageList();
+    } else {
+      let arr = [];
+      localStorage.setItem("historyList", JSON.stringify(arr));
+      this.getLocalStorageList();
+    }
   },
   methods: {
     // 获取热搜数据
@@ -130,6 +153,43 @@ export default {
     getSearchNavId(name) {
       console.log(name);
       this.categoryId = name;
+    },
+
+    // 获取点击的热搜词
+    getHotSearchName(val) {
+      if (this.historyList.length === 0 || !this.historyList.includes(val)) {
+        this.historyList.unshift(val);
+      }
+      console.log(val, this.historyList);
+
+      localStorage.setItem("historyList", JSON.stringify(this.historyList));
+    },
+    // 获取搜索结果点击的值
+    getSearchVal(val) {
+      if (this.historyList.length === 0 || !this.historyList.includes(val)) {
+        this.historyList.unshift(val);
+      }
+      console.log(val, this.historyList);
+
+      localStorage.setItem("historyList", JSON.stringify(this.historyList));
+    },
+
+    // 将localStorage的数组添加至historyList
+    getLocalStorageList() {
+      let localStorageList = JSON.parse(localStorage.getItem("historyList"));
+
+      localStorageList.map((item) => {
+        this.historyList.push(item);
+      });
+
+      console.log(this.historyList);
+    },
+    // 清除localStorage数据
+    delLocalstorage() {
+      let arr = [];
+      localStorage.setItem("historyList", JSON.stringify(arr));
+      this.historyList = [];
+      console.log("触发删除");
     },
   },
   watch: {
@@ -303,6 +363,9 @@ export default {
         text-align: left;
         font-size: 14px;
         border-bottom: 1px solid #e1e1e1;
+      }
+      li a {
+        color: #333;
       }
     }
   }

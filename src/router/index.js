@@ -4,7 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import TopRankView from '../views/TopRankView.vue'
 import ChannelView from '../views/ChannelView.vue'
 import ListenListView from '../views/ListenListView.vue'
-// import TopRankContentView from '../views/TopRankContentView.vue'
+import SearchResView from '../views/SearchResView.vue'
 
 Vue.use(VueRouter)
 
@@ -36,6 +36,11 @@ const routes = [
     path: '/ting/remen',
     name: 'ting',
     component: ListenListView,
+  },
+  {
+    path: '/search/:searchVal',
+    name: 'searchRes',
+    component: SearchResView,
   },
 ]
 
