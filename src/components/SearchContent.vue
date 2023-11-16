@@ -17,7 +17,13 @@
         <van-icon name="delete-o" @click="delLocalstorage()" />
       </div>
       <ul class="history">
-        <li v-for="i in historyList" :key="i">{{ i }}</li>
+        <router-link
+          tag="li"
+          v-for="i in historyList"
+          :key="i"
+          :to="{ name: 'searchRes', params: { searchVal: i } }"
+          >{{ i }}</router-link
+        >
       </ul>
     </div>
 
@@ -62,15 +68,13 @@
       </div>
       <!-- 搜索列表 -->
       <ul class="queryResList">
-        <router-link
-          tag="li"
-          :to="{name: 'searchRes', params: {searchVal: i.keyword} }"
+        <li
           v-for="i in queryResList"
           :key="i.keyword"
           @click="getSearchVal(i.keyword)"
         >
           {{ i.keyword }}
-        </router-link>
+        </li>
         <router-view></router-view>
       </ul>
     </div>
@@ -163,8 +167,13 @@ export default {
       console.log(val, this.historyList);
 
       localStorage.setItem("historyList", JSON.stringify(this.historyList));
+
+      this.$router.push({
+        name: "searchRes",
+        params: { searchVal: val },
+      });
     },
-    // 获取搜索结果点击的值
+    // 获取点击的搜索结果值
     getSearchVal(val) {
       if (this.historyList.length === 0 || !this.historyList.includes(val)) {
         this.historyList.unshift(val);
@@ -172,6 +181,11 @@ export default {
       console.log(val, this.historyList);
 
       localStorage.setItem("historyList", JSON.stringify(this.historyList));
+
+      this.$router.push({
+        name: "searchRes",
+        params: { searchVal: val },
+      });
     },
 
     // 将localStorage的数组添加至historyList

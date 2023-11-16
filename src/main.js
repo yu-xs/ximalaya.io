@@ -7,6 +7,8 @@ import vant from '../untils/vant-config'
 
 Vue.use(vant);
 Vue.prototype.$axios = axios;
+axios.defaults.withCredentials = true;
+
 Vue.config.productionTip = false
 
 new Vue({
